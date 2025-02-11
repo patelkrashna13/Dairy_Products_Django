@@ -1,0 +1,57 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %}About{% endblock title %}
+
+{% block main-content %}  
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h3>Welcome, <span class="text-capitalize">{{ request.user }}</span></h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3 border-end pe-4">
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="{% url 'profile' %}" class="btn btn-primary">Profile</a></li>
+                <li><a href="{% url 'address' %}" class="btn">Address</a></li>
+            </ul>
+        </div>
+
+        <div class="col-sm-8 offset-sm-1">
+            <form action="" method="post" class="border p-4 rounded shadow-sm bg-light">
+                {% csrf_token %}
+                <h4 class="mb-3 text-primary">Enter Your Information</h4>
+                {% for fm in form %}
+                    <div class="form-group mb-3">
+                        {{ fm.label_tag }} 
+                        {{ fm }} 
+                        <small class="text-danger">{{ fm.errors|striptags }}</small>
+                    </div>
+                {% endfor %}
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Submit</button>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger my-3">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-{{ msg.tags }}" role="alert">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}

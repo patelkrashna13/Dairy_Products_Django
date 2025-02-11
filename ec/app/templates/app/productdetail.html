@@ -1,0 +1,71 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %}Category{% endblock title %}
+
+{% block main-content %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-start g-4">
+        <div class="col-lg-5 col-md-6">
+            <div class="img-container rounded shadow">
+                <img src="{{ product.product_image.url }}" class="img-fluid" alt="{{ product.title }}">
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-6 p-4 border rounded bg-light shadow-sm">
+            <h1 class="fw-bold" style="font-family: 'Georgia', serif; font-size: 2.5rem; color: #343a40;">{{ product.title }}</h1>
+            <h5 class="text-primary fw-semibold">Rs. {{ product.discounted_price }} /-</h5>
+            <small class="text-decoration-line-through text-muted fs-6">
+                <del>Rs. {{ product.selling_price }} /-</del>
+            </small>
+            <br>
+            <h4 class="fw-semibold mt-3">Product Features</h4>
+            <ul class="list-unstyled fs-5" style="font-family: 'Rajdhani', sans-serif;">
+                <li><i class="fas fa-check-circle text-success"></i> {{ product.description }}</li>
+            </ul>
+            
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <form action="/add-to-cart" class="d-inline">
+                    <input type="hidden" name="prod_id" value="{{ product.id }}">   
+                    <button type="submit" class="btn btn-primary shadow-sm" style="height:60px; width:190px">
+                        <span>Add to Cart</span>
+                    </button>
+                </form>
+                <a href="{% url 'showcart' %}" class="btn btn-warning shadow-sm" style="height:60px; width:190px">
+                    <div style="margin-top:0.5rem">Buy Now</div>
+                </a>
+            </div>
+        </div>    
+    </div>
+</div>
+
+<style>
+    .img-container {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    .img-container img {
+        transition: transform 0.3s ease;
+    }
+    .img-container:hover {
+        transform: scale(1.03);
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+    .btn-warning {
+        background-color: #ffc107;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    .btn-warning:hover {
+        background-color: #e0a800; /* Darker shade on hover */
+    }
+</style>
+
+{% endblock main-content %}

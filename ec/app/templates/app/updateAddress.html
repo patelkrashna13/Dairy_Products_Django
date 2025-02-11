@@ -1,0 +1,35 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %}Category{% endblock title %}
+
+{% block main-content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h3>Welcome, <span class="text-capitalize">{{ request.user }}</span></h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+            <form action="" method="post" class="border p-4 rounded shadow bg-light">
+                {% csrf_token %}
+                <h4 class="mb-4 text-primary text-center">Update Your Information</h4>
+                
+                {% for fm in form %}
+                    <div class="form-group mb-3">
+                        {{ fm.label_tag }} 
+                        {{ fm }} 
+                        <small class="text-danger">{{ fm.errors|striptags }}</small>
+                    </div>
+                {% endfor %}
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2" style="width:150px;">Update</button>
+                    <a href="{% url 'address' %}" class="btn btn-danger btn-lg" style="width:150px;">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
