@@ -24,7 +24,7 @@
                 
                 <div class="upi-details animate__animated animate__fadeInUp">
                     <h5>Scan & Pay to</h5>
-                    <p class="upi-id">Milkhive</p>
+                    <p class="upi-id">MilkHive</p>
                 </div>
                 
                 <div class="payment-status">
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateQRCode() {
         const qrContainer = document.getElementById('qrcode');
         const loadingSpinner = document.querySelector('.qr-loading');
-        const upiId = "Milkhive";
+        const upiId = "9106805856@fam";
         const amount = "{{ totalamount }}";
         const upiUrl = "upi://pay?pa=" + upiId + "&am=" + amount + "&cu=INR&pn=E-Commerce&tn=Payment for Order";
         
