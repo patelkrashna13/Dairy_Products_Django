@@ -3,43 +3,435 @@
 {% block title %}Address{% endblock title %}
 
 {% block main-content %}
-<div class="container my-5">
-    <div class="row mb-4">
-        <div class="col-12 text-center">
-            <h3>Welcome, <span class="text-capitalize">{{ request.user }}</span></h3>
+<div class="profile-container">
+    <div class="container">
+        <div class="profile-header animate__animated animate__fadeInDown">
+            <h1 class="profile-title">My Addresses</h1>
+            <div class="profile-welcome">Welcome, <span class="user-name text-capitalize">{{ request.user }}</span></div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3 border-end pe-4">
-            <ul class="list-unstyled">
-                <li class="mb-2"><a href="{% url 'profile' %}" class="btn btn-light w-100">Profile</a></li>
-                <li><a href="{% url 'address' %}" class="btn btn-primary w-100">Address</a></li>
-            </ul>
-        </div>
-
-        <div class="col-sm-9">
-            <div class="row">
-                {% for ad in add %}
-                <div class="col-sm-6 mb-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Address {{ forloop.counter }}</h5>
-                            <p class="card-text"><strong>Name:</strong> {{ ad.name }}</p>
-                            <p class="card-text"><strong>Locality:</strong> {{ ad.locality }}</p>
-                            <p class="card-text"><strong>Mobile:</strong> {{ ad.mobile }}</p>
-                            <p class="card-text"><strong>City:</strong> {{ ad.city }}</p>
-                            <p class="card-text"><strong>State:</strong> {{ ad.state }}</p>
-                            <p class="card-text"><strong>Pincode:</strong> {{ ad.zipcode }}</p>
-                            <div class="text-center">
-                                <a href="{% url 'updateAddress' pk=ad.id %}" class="btn btn-success">Update</a>
-                            </div>
-                        </div>
-                    </div>
+        
+        {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-8 offset-lg-3 offset-md-4">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeIn" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
+        
+        <div class="row profile-content">
+            <div class="col-lg-3 col-md-4">
+                <div class="profile-sidebar animate__animated animate__fadeInLeft">
+                    <div class="user-avatar">
+                        <div class="avatar-circle">
+                            <span>{{ request.user.username.0|upper }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-menu">
+                        <a href="{% url 'profile' %}" class="menu-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="{% url 'address' %}" class="menu-item active">
+                            <i class="fas fa-map-marker-alt"></i> Address
+                        </a>
+                        <a href="{% url 'orders' %}" class="menu-item">
+                            <i class="fas fa-box"></i> Orders
+                        </a>
+                        <a href="{% url 'passwordchange' %}" class="menu-item">
+                            <i class="fas fa-lock"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9 col-md-8">
+                <div class="addresses-container animate__animated animate__fadeInRight">
+                    <div class="row">
+                        {% for ad in add %}
+                        <div class="col-md-6 mb-4">
+                            <div class="address-card">
+                                <div class="address-header">
+                                    <h2 class="address-title">Address {{ forloop.counter }}</h2>
+                                    <div class="address-controls">
+                                        <a href="{% url 'updateAddress' pk=ad.id %}" class="edit-address">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="address-details">
+                                    <div class="address-item">
+                                        <span class="label">Name:</span>
+                                        <span class="value">{{ ad.name }}</span>
+                                    </div>
+                                    <div class="address-item">
+                                        <span class="label">Locality:</span>
+                                        <span class="value">{{ ad.locality }}</span>
+                                    </div>
+                                    <div class="address-item">
+                                        <span class="label">Mobile:</span>
+                                        <span class="value">{{ ad.mobile }}</span>
+                                    </div>
+                                    <div class="address-item">
+                                        <span class="label">City:</span>
+                                        <span class="value">{{ ad.city }}</span>
+                                    </div>
+                                    <div class="address-item">
+                                        <span class="label">State:</span>
+                                        <span class="value">{{ ad.state }}</span>
+                                    </div>
+                                    <div class="address-item">
+                                        <span class="label">Pincode:</span>
+                                        <span class="value">{{ ad.zipcode }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="address-actions">
+                                    <a href="{% url 'updateAddress' pk=ad.id %}" class="btn update-btn">
+                                        <i class="fas fa-edit"></i> Update
+                                    </a>
+                                    <a href="{% url 'delete-address' address_id=ad.id %}" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this address?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <div class="empty-addresses">
+                                <div class="empty-icon">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </div>
+                                <h3>No Addresses Found</h3>
+                                <p>You haven't added any addresses yet.</p>
+                                <a href="{% url 'profile' %}" class="btn submit-btn mt-3">
+                                    <i class="fas fa-plus"></i> Add New Address
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .profile-container {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        min-height: 85vh;
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .profile-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .profile-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-welcome {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+    }
+    
+    .user-name {
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .profile-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .profile-sidebar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-avatar {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.7));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e3c72;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .menu-item {
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .menu-item i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .menu-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        transform: translateX(5px);
+    }
+    
+    .menu-item.active {
+        background: #ffffff;
+        color: #1e3c72;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .addresses-container {
+        padding: 0;
+    }
+    
+    .address-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .address-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .address-header {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        padding: 1rem 1.25rem;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .address-title {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .address-controls {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .edit-address {
+        color: white;
+        padding: 5px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .edit-address:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    .address-details {
+        padding: 1.25rem;
+    }
+    
+    .address-item {
+        display: flex;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .address-item .label {
+        font-weight: 600;
+        color: #1e3c72;
+        width: 80px;
+        flex-shrink: 0;
+    }
+    
+    .address-item .value {
+        color: #64748b;
+    }
+    
+    .address-actions {
+        padding: 1rem 1.25rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    
+    .update-btn, .delete-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        flex: 1;
+        text-align: center;
+    }
+    
+    .update-btn {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        color: white;
+        border: none;
+    }
+    
+    .update-btn:hover {
+        background: linear-gradient(135deg, #0c2b5e, #3a9fee);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+    
+    .delete-btn {
+        background: #fff;
+        color: #dc3545;
+        border: 1px solid #dc3545;
+    }
+    
+    .delete-btn:hover {
+        background: #dc3545;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-addresses {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-icon {
+        font-size: 4rem;
+        color: #4facfe;
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-addresses h3 {
+        color: #1e3c72;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-addresses p {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #0c2b5e, #3a9fee);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+    
+    @media (max-width: 991px) {
+        .profile-content {
+            flex-direction: column;
+        }
+        
+        .profile-sidebar {
+            margin-bottom: 2rem;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .profile-container {
+            padding: 2rem 0;
+        }
+        
+        .profile-title {
+            font-size: 2rem;
+        }
+        
+        .address-header {
+            padding: 0.75rem 1rem;
+        }
+        
+        .address-title {
+            font-size: 1.1rem;
+        }
+        
+        .address-details {
+            padding: 1rem;
+        }
+        
+        .address-actions {
+            padding: 0 1rem 1rem;
+        }
+    }
+</style>
 {% endblock main-content %}

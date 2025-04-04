@@ -1,71 +1,343 @@
 {% extends "app/base.html" %}
 {% load static %}
-{% block title %}Category{% endblock title %}
+{% block title %}{{ product.title }}{% endblock title %}
 
 {% block main-content %}
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-start g-4">
-        <div class="col-lg-5 col-md-6">
-            <div class="img-container rounded shadow">
-                <img src="{{ product.product_image.url }}" class="img-fluid" alt="{{ product.title }}">
+<div class="product-detail-container">
+    <div class="container">
+        <div class="product-header animate__animated animate__fadeInDown">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'category' product.category %}">{{ product.category }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <div class="row product-content">
+            <div class="col-lg-6 col-md-6">
+                <div class="product-image-container animate__animated animate__fadeInLeft">
+                    <div class="product-image">
+                        <img src="{{ product.product_image.url }}" alt="{{ product.title }}" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="product-info-container animate__animated animate__fadeInRight">
+                    <h1 class="product-title">{{ product.title }}</h1>
+                    
+                    <div class="product-pricing">
+                        <div class="discount-price">₹{{ product.discounted_price }}</div>
+                        <div class="original-price">₹{{ product.selling_price }}</div>
+                        {% if product.discounted_price < product.selling_price %}
+                            {% with savings=product.selling_price|floatformat:0|add:"-"|add:product.discounted_price|floatformat:0 %}
+                                <div class="savings-badge">Save ₹{{ savings }}</div>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-description">
+                        <h2 class="section-title">Description</h2>
+                        <p>{{ product.description }}</p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <h2 class="section-title">Features</h2>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Premium Quality</li>
+                            <li><i class="fas fa-check-circle"></i> {{ product.description }}</li>
+                            <li><i class="fas fa-check-circle"></i> Fast Delivery</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <form action="/add-to-cart" class="d-inline">
+                            <input type="hidden" name="prod_id" value="{{ product.id }}">
+                            <button type="submit" class="btn add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </form>
+                        <a href="{% url 'showcart' %}" class="btn buy-now-btn">
+                            <i class="fas fa-bolt"></i> Buy Now
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-lg-5 col-md-6 p-4 border rounded bg-light shadow-sm">
-            <h1 class="fw-bold" style="font-family: 'Georgia', serif; font-size: 2.5rem; color: #343a40;">{{ product.title }}</h1>
-            <h5 class="text-primary fw-semibold">Rs. {{ product.discounted_price }} /-</h5>
-            <small class="text-decoration-line-through text-muted fs-6">
-                <del>Rs. {{ product.selling_price }} /-</del>
-            </small>
-            <br>
-            <h4 class="fw-semibold mt-3">Product Features</h4>
-            <ul class="list-unstyled fs-5" style="font-family: 'Rajdhani', sans-serif;">
-                <li><i class="fas fa-check-circle text-success"></i> {{ product.description }}</li>
-            </ul>
-            
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <form action="/add-to-cart" class="d-inline">
-                    <input type="hidden" name="prod_id" value="{{ product.id }}">   
-                    <button type="submit" class="btn btn-primary shadow-sm" style="height:60px; width:190px">
-                        <span>Add to Cart</span>
-                    </button>
-                </form>
-                <a href="{% url 'showcart' %}" class="btn btn-warning shadow-sm" style="height:60px; width:190px">
-                    <div style="margin-top:0.5rem">Buy Now</div>
-                </a>
-            </div>
-        </div>    
     </div>
 </div>
 
 <style>
-    .img-container {
-        border-radius: 15px;
+    .product-detail-container {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        min-height: 85vh;
+        padding: 3rem 0;
+        position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease;
     }
-    .img-container img {
-        transition: transform 0.3s ease;
+    
+    .product-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
     }
-    .img-container:hover {
-        transform: scale(1.03);
+    
+    .product-header {
+        margin-bottom: 2rem;
     }
-    .btn-primary {
-        background-color: #007bff;
+    
+    .breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .breadcrumb-item {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .breadcrumb-item a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .breadcrumb-item a:hover {
+        color: #ffffff;
+    }
+    
+    .breadcrumb-item.active {
+        color: #ffffff;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .product-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .product-image-container {
+        margin-bottom: 2rem;
+    }
+    
+    .product-image {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .product-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.05), rgba(30, 60, 114, 0.05));
+    }
+    
+    .product-image img {
+        max-height: 400px;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    .product-image:hover img {
+        transform: scale(1.05);
+    }
+    
+    .product-info-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        height: 100%;
+    }
+    
+    .product-title {
+        color: #1e3c72;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+    
+    .product-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        border-radius: 3px;
+    }
+    
+    .product-pricing {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .discount-price {
+        color: #4facfe;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+    
+    .original-price {
+        color: #64748b;
+        text-decoration: line-through;
+        font-size: 1.25rem;
+    }
+    
+    .savings-badge {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .section-title {
+        color: #1e3c72;
+        font-weight: 600;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    .product-description {
+        margin-bottom: 2rem;
+    }
+    
+    .product-description p {
+        color: #64748b;
+        line-height: 1.7;
+    }
+    
+    .product-features {
+        margin-bottom: 2rem;
+    }
+    
+    .features-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .features-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: #64748b;
+    }
+    
+    .features-list li i {
+        color: #4facfe;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+    
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .add-to-cart-btn {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        color: white;
         border: none;
-        transition: background-color 0.3s ease;
+        border-radius: 10px;
+        padding: 1rem 1.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        flex: 1;
     }
-    .btn-primary:hover {
-        background-color: #0056b3; /* Darker shade on hover */
+    
+    .add-to-cart-btn:hover {
+        background: linear-gradient(135deg, #0c2b5e, #3a9fee);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: white;
     }
-    .btn-warning {
-        background-color: #ffc107;
+    
+    .buy-now-btn {
+        background: linear-gradient(135deg, #f97316, #fb923c);
+        color: white;
         border: none;
-        transition: background-color 0.3s ease;
+        border-radius: 10px;
+        padding: 1rem 1.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        flex: 1;
     }
-    .btn-warning:hover {
-        background-color: #e0a800; /* Darker shade on hover */
+    
+    .buy-now-btn:hover {
+        background: linear-gradient(135deg, #ea580c, #f97316);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+    
+    @media (max-width: 991px) {
+        .product-image-container,
+        .product-info-container {
+            margin-bottom: 2rem;
+        }
+        
+        .product-actions {
+            flex-direction: column;
+        }
+        
+        .add-to-cart-btn,
+        .buy-now-btn {
+            width: 100%;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .product-detail-container {
+            padding: 2rem 0;
+        }
+        
+        .product-title {
+            font-size: 1.75rem;
+        }
+        
+        .product-image {
+            padding: 1.5rem;
+        }
+        
+        .product-info-container {
+            padding: 1.5rem;
+        }
     }
 </style>
-
 {% endblock main-content %}

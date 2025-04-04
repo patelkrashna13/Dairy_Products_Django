@@ -16,11 +16,14 @@ urlpatterns = [
     path("profile/", views.ProfileView.as_view(),name="profile"), #as_view is used for the class
     path("address/", views.address,name="address"),
     path("updateAddress/<int:pk>", views.updateAddress.as_view(),name="updateAddress"),
+    path("delete-address/<int:address_id>/", views.delete_address, name="delete-address"),
     path("add-to-cart/",views.add_to_cart,name="add-to-cart"),
     path("cart/", views.show_cart,name="showcart"),
     path("checkout/", views.checkout.as_view(),name="checkout"),
-    # path("paymentdone/", views.payment_done,name="paymentdone"),
-    path("orders/", views.home,name="orders"),    
+    path("upi-payment/", views.upi_payment, name="upi-payment"),
+    path("paymentdone/", views.payment_done, name="paymentdone"),
+    path("orders/", views.orders, name="orders"),    
+    path("delete-order/<int:order_id>/", views.delete_order, name="delete-order"),
 
     path('pluscart/', views.plus_cart),
     path('removecart/', views.remove_cart),

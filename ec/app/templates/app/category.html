@@ -2,37 +2,315 @@
 {% load static%}
 {% block title %}Category{% endblock title %}
 
-{% block main-content %}    
-    <div class="container my-5">
+{% block main-content %} 
+<div class="category-container">
+    <div class="container">
+        <div class="category-header animate__animated animate__fadeInDown">
+            <h1 class="category-title">Product Categories</h1>
+            <div class="title-underline"></div>
+        </div>
+        
         <div class="row">
-            <div class="col-sm-3">
-                <div class="list-group">
-                {% for val in title %}
-                     <a href="{% url 'category-title' val.title %}" class="list-group-item list-group-item-action " aria-current="true"> {% comment %} 'val.title' is the parameter {% endcomment %}
-                        {{val.title}}
-                    </a>
-                {% endfor %}
+            <div class="col-lg-3 col-md-4">
+                <div class="category-sidebar animate__animated animate__fadeInLeft">
+                    <h2 class="sidebar-title">Categories</h2>
+                    <div class="category-list">
+                        {% for val in title %}
+                            <a href="{% url 'category-title' val.title %}" class="category-item {% if request.path == val.get_url %}active{% endif %}">
+                                {{ val.title }}
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        <div class="col-sm-9">
-            <div class="row">
-                {% for prod in product%}
-                <div class="col text-center mb-4">
-                    <a href="{% url 'product-detail' prod.id %}" class="btn">
-                    <div>
-                        <img src="{{prod.product_image.url}}" width="300px" height="200px" />
-                        <div class="fw-bold">{{prod.title}}</div>
-                        <div class="fw-bold text-danger">
-                            Rs.{{prod.discounted_price}}/-
-                            <small class="fw-light text-decoration-line-through">
-                                {{prod.selling_price}}
-                            </small>
-                        </div>
+            
+            <div class="col-lg-9 col-md-8">
+                <div class="products-grid animate__animated animate__fadeInRight">
+                    <div class="row">
+                        {% for prod in product %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="product-card">
+                                    <a href="{% url 'product-detail' prod.id %}" class="product-link">
+                                        <div class="product-img-container">
+                                            <img src="{{ prod.product_image.url }}" alt="{{ prod.title }}" class="product-img">
+                                        </div>
+                                        <div class="product-info">
+                                            <h3 class="product-title">{{ prod.title }}</h3>
+                                            <div class="product-price">
+                                                <span class="current-price">₹{{ prod.discounted_price }}</span>
+                                                <span class="original-price">₹{{ prod.selling_price }}</span>
+                                            </div>
+                                            <div class="view-details">
+                                                <span>View Details</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="empty-products">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-box-open"></i>
+                                    </div>
+                                    <h3>No Products Found</h3>
+                                    <p>There are no products available in this category yet.</p>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                    </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
+</div>
+
+<style>
+    .category-container {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        min-height: 85vh;
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .category-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+    
+    .category-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .category-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .title-underline {
+        width: 80px;
+        height: 4px;
+        background: #ffffff;
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+    
+    .category-sidebar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-title {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .category-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .category-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+        color: #ffffff;
+    }
+    
+    .category-item.active {
+        background: #ffffff;
+        color: #1e3c72;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .products-grid {
+        padding: 0;
+    }
+    
+    .product-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .product-img-container {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        padding: 1rem;
+    }
+    
+    .product-img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    .product-card:hover .product-img {
+        transform: scale(1.05);
+    }
+    
+    .product-info {
+        padding: 1.25rem;
+        position: relative;
+    }
+    
+    .product-title {
+        color: #1e3c72;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        height: 2.5rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .product-price {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .current-price {
+        color: #4facfe;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+    
+    .original-price {
+        color: #64748b;
+        text-decoration: line-through;
+        font-size: 0.9rem;
+    }
+    
+    .view-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        color: #1e3c72;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover .view-details {
+        color: #4facfe;
+    }
+    
+    .product-card:hover .view-details i {
+        transform: translateX(5px);
+    }
+    
+    .view-details i {
+        transition: transform 0.3s ease;
+    }
+    
+    .empty-products {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-icon {
+        font-size: 4rem;
+        color: #4facfe;
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-products h3 {
+        color: #1e3c72;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-products p {
+        color: #64748b;
+        margin-bottom: 0;
+    }
+    
+    @media (max-width: 991px) {
+        .category-content {
+            flex-direction: column;
+        }
+        
+        .category-sidebar {
+            margin-bottom: 2rem;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .category-container {
+            padding: 2rem 0;
+        }
+        
+        .category-title {
+            font-size: 2rem;
+        }
+        
+        .product-img-container {
+            height: 180px;
+        }
+    }
+</style>
 {% endblock main-content %}

@@ -54,30 +54,91 @@ class CustomerRegistrationView(View):
 
 class ProfileView(View):
     def get(self,request):
-        form = CustomerProfileForm()
-        return render(request, 'app/profile.html',locals())
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            return redirect('login')
+            
+        # Get existing customer profile data if any
+        try:
+            customer = Customer.objects.filter(user=request.user).first()
+            # Pre-populate form with existing data if available
+            if customer:
+                form = CustomerProfileForm(instance=customer)
+            else:
+                form = CustomerProfileForm()
+        except:
+            form = CustomerProfileForm()
+            
+        # Calculate account statistics
+        orders_count = OrderPlaced.objects.filter(user=request.user).count()
+        saved_addresses = Customer.objects.filter(user=request.user).count()
+        
+        # Get recent orders
+        recent_orders = OrderPlaced.objects.filter(user=request.user).order_by('-ordered_date')[:3]
+        
+        # Prepare context data
+        context = {
+            'form': form,
+            'customer': customer,
+            'orders_count': orders_count,
+            'saved_addresses': saved_addresses,
+            'recent_orders': recent_orders,
+            'user': request.user
+        }
+        
+        return render(request, 'app/profile.html', context)
+        
     def post(self,request):
         form = CustomerProfileForm(request.POST)
         if form.is_valid():
             user = request.user
+            # Check if user already has a profile
+            existing_customer = Customer.objects.filter(user=user).first()
+            
+            # Get cleaned data
             name = form.cleaned_data['name']
             locality = form.cleaned_data['locality']
             city = form.cleaned_data['city']
             mobile = form.cleaned_data['mobile']
             state = form.cleaned_data['state']
             zipcode = form.cleaned_data['zipcode']
-
-            reg = Customer(user=user,name=name,locality=locality,mobile=mobile,city=city,state=state,zipcode=zipcode)
-            reg.save()
-            messages.success(request,"Congratulations! Profile Save Successfully")
+            
+            if existing_customer:
+                # Update existing profile
+                existing_customer.name = name
+                existing_customer.locality = locality
+                existing_customer.city = city
+                existing_customer.mobile = mobile
+                existing_customer.state = state
+                existing_customer.zipcode = zipcode
+                existing_customer.save()
+            else:
+                # Create new profile
+                reg = Customer(user=user,name=name,locality=locality,mobile=mobile,city=city,state=state,zipcode=zipcode)
+                reg.save()
+                
+            messages.success(request,"Congratulations! Profile Saved Successfully")
         else:
             messages.warning(request,"Invalid Input Data")
-        return render(request, 'app/profile.html',locals())
+            
+        return redirect('profile')
 
 
 def address(request):
     add=Customer.objects.filter(user=request.user)
     return render(request, 'app/address.html',locals())
+
+def delete_address(request, address_id):
+    if request.user.is_authenticated:
+        try:
+            address = Customer.objects.get(id=address_id, user=request.user)
+            address.delete()
+            messages.success(request, "Address deleted successfully!")
+        except Customer.DoesNotExist:
+            messages.error(request, "Address not found!")
+        return redirect("address")
+    else:
+        return redirect("login")
 
 class updateAddress(View):
     def get(self,request,pk):
@@ -90,7 +151,7 @@ class updateAddress(View):
             add = Customer.objects.get(pk=pk)
             add.name = form.cleaned_data['name']
             add.locality = form.cleaned_data['locality']
-            city = form.cleaned_data['city']
+            add.city = form.cleaned_data['city']
             add.mobile = form.cleaned_data['mobile']
             add.state = form.cleaned_data['state']
             add.zipcode = form.cleaned_data['zipcode']
@@ -173,7 +234,7 @@ def plus_cart(request):
         user = request.user
         cart = Cart.objects.filter(user=user)
         amount = sum(item.quantity * item.product.discounted_price for item in cart)
-        totalamount = amount + 40  # Assuming shipping fee is 40
+        totalamount = amount + 20  # Assuming shipping fee is 40
 
         data = {
             'quantity': c.quantity,
@@ -183,7 +244,6 @@ def plus_cart(request):
 
         return JsonResponse(data)
 
-    
 def remove_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
@@ -286,23 +346,91 @@ class checkout(View):
         
         return render(request, "app/checkout.html", locals())
     
+    def post(self, request):
+        user = request.user
+        customer_id = request.POST.get('custid')
+        total_amount = request.POST.get('totamount')
+        
+        if not customer_id:
+            messages.warning(request, "Please select a shipping address")
+            return redirect("checkout")
+        
+        # Create a Payment record with temporary order ID
+        payment = Payment(
+            user=user,
+            amount=total_amount,
+            razorpay_order_id=f"temp_{user.id}_{int(float(total_amount))}",
+            razorpay_payment_status="created"
+        )
+        payment.save()
+        
+        # Redirect to UPI payment page with customer ID
+        return redirect(f'/upi-payment/?custid={customer_id}')
+
+def upi_payment(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    
+    if not custid:
+        messages.warning(request, "Invalid request")
+        return redirect("checkout")
+    
+    # Get cart items to calculate total
+    cart_items = Cart.objects.filter(user=user)
+    
+    famount = 0
+    for p in cart_items:
+        value = p.quantity * p.product.discounted_price
+        famount += value
+    
+    totalamount = famount + 40  # Adding shipping fee
+    
+    return render(request, "app/upi_payment.html", locals())
+
 def payment_done(request):
     order_id=request.GET.get('order_id')
     payment_id=request.GET.get('payment_id')
     cust_id=request.GET.get('cust_id')
     user=request.user
     customer=Customer.objects.get(id=cust_id)
-    payment=Payment.objects.get(razorpay_order_id=order_id)
-    payment.paid=True
-    payment.razorpay_payment_id=payment_id
-    payment.save()
-
+    
+    # Find payment by user (if coming from UPI payment, order_id might be different)
+    try:
+        payment = Payment.objects.filter(user=user).latest('id')
+        payment.razorpay_order_id = order_id
+        payment.razorpay_payment_id = payment_id
+        payment.paid = True
+        payment.save()
+    except Payment.DoesNotExist:
+        messages.warning(request, "Payment information not found")
+        return redirect("checkout")
+    
     cart=Cart.objects.filter(user=user)
     for c in cart:
         OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity,payment=payment).save()
         c.delete()
 
     return redirect("orders")
+
+def orders(request):
+    if request.user.is_authenticated:
+        # Get all orders placed by the current user
+        orders = OrderPlaced.objects.filter(user=request.user).order_by('-ordered_date')
+        return render(request, "app/orders.html", {'orders': orders})
+    else:
+        return redirect("login")
+
+def delete_order(request, order_id):
+    if request.user.is_authenticated:
+        try:
+            order = OrderPlaced.objects.get(id=order_id, user=request.user)
+            order.delete()
+            messages.success(request, "Order deleted successfully!")
+        except OrderPlaced.DoesNotExist:
+            messages.error(request, "Order not found!")
+        return redirect("orders")
+    else:
+        return redirect("login")
 
 
 

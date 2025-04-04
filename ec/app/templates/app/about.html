@@ -3,27 +3,438 @@
 {% block title %}About{% endblock title %}
 
 {% block main-content %}  
-<div class="container my-5">
-    <h2 class="text-center mb-4 text-primary">About Us</h2>
-    
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <p class="fs-4 text-center">
-                This is a public limited company having its registered and corporate office at Surat, Gujarat. The company was incorporated in the year 2016 and production commenced in 2020. This is one of the fastest growing Public Listed Companies in Surat.
-            </p>
+<div class="about-page-wrapper">
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 fw-bold page-title animate__animated animate__fadeInDown">About MilkHive</h1>
+                    <div class="title-underline animate__animated animate__fadeIn animate__delay-1s"></div>
+                </div>
+            </div>
         </div>
-    </div> 
-    
-    <hr class="my-4">
+        <div class="shape-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
 
-    <h2 class="text-center mb-4 text-primary">Mission</h2>
-    
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <p class="fs-4 text-center">
-                To embrace the right technology to delight our customers, empowering the farmer community through our unique 'Relationship Farming' model.
-            </p>
+    <section class="mission-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                    <div class="content-card animate__animated animate__fadeInRight">
+                        <div class="card-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h2>Our Mission</h2>
+                        <p>To embrace the right technology to delight our customers, empowering the farmer community through our unique 'Relationship Farming' model.</p>
+                        <ul class="mission-points">
+                            <li><span class="icon"><i class="fas fa-check-circle"></i></span>Provide premium dairy products</li>
+                            <li><span class="icon"><i class="fas fa-check-circle"></i></span>Support local farmers</li>
+                            <li><span class="icon"><i class="fas fa-check-circle"></i></span>Implement sustainable practices</li>
+                            <li><span class="icon"><i class="fas fa-check-circle"></i></span>Deliver the highest quality</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <div class="vision-box animate__animated animate__fadeInLeft">
+                        <h3>Our Vision</h3>
+                        <p>To be the most trusted dairy brand, synonymous with purity and innovation, bringing nature's goodness to every household.</p>
+                        <div class="values-container">
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <span>Natural</span>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <span>Caring</span>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <span>Quality</span>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                                <span>Sustainable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section class="team-section">
+        <div class="shape-divider flip">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="section-title animate__animated animate__fadeIn">Our Commitment</h2>
+                    <div class="title-underline mx-auto"></div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="commitment-card animate__animated animate__zoomIn">
+                        <p>At MilkHive, we're committed to delivering the finest dairy products while maintaining our core values of quality, sustainability, and community support. Every product we create is a testament to our dedication to excellence and our promise to you - our valued customers.</p>
+                        <div class="signature">
+                            <span>Krashna Patel</span>
+                            <small>Founder & CEO</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+
+<style>
+    /* Colors and Variables */
+    :root {
+        --primary-blue: #1e3c72;
+        --secondary-blue: #2a5298;
+        --accent-blue: #4facfe;
+        --light-blue: #e7eeff;
+        --dark-text: #0d253f;
+        --light-text: #64748b;
+        --bg-light: #f8f9fa;
+        --white: #ffffff;
+        --gradient-blue: linear-gradient(135deg, #1e3c72, #4facfe);
+        --gradient-purple: linear-gradient(135deg, #8e44ad, #9b59b6);
+    }
+    
+    /* Main Styles */
+    .about-page-wrapper {
+        overflow: hidden;
+        background-color: var(--white);
+        position: relative;
+    }
+    
+    .hero-section {
+        background: var(--gradient-blue);
+        padding: 6rem 0 8rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+    
+    .page-title {
+        color: var(--white);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+    }
+    
+    .title-underline {
+        width: 80px;
+        height: 4px;
+        background: var(--white);
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+    
+    .shape-divider {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        transform: rotate(180deg);
+    }
+    
+    .shape-divider.flip {
+        transform: rotate(0deg);
+        top: 0;
+    }
+    
+    .shape-divider svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 100px;
+    }
+    
+    .shape-divider .shape-fill {
+        fill: var(--white);
+    }
+    
+    /* Mission Section */
+    .mission-section {
+        padding: 6rem 0;
+        background-color: var(--light-blue);
+        position: relative;
+    }
+    
+    .mission-points {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0 0;
+    }
+    
+    .mission-points li {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+        position: relative;
+        color: var(--light-text);
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+    }
+    
+    .mission-points li:hover {
+        transform: translateX(5px);
+        color: var(--primary-blue);
+    }
+    
+    .mission-points .icon {
+        position: absolute;
+        left: 0;
+        top: 0.2rem;
+        color: var(--accent-blue);
+    }
+    
+    .vision-box {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        border-left: 5px solid var(--accent-blue);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vision-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: var(--gradient-blue);
+        border-radius: 0 0 0 100%;
+        opacity: 0.05;
+    }
+    
+    .vision-box h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1.2rem;
+        font-weight: 700;
+    }
+    
+    .vision-box p {
+        color: var(--light-text);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+    
+    .values-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .value-item {
+        flex: 1 1 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.2rem;
+        background: var(--light-blue);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .value-item:hover {
+        transform: translateY(-5px);
+        background: var(--gradient-blue);
+    }
+    
+    .value-item:hover .value-icon,
+    .value-item:hover span {
+        color: var(--white);
+    }
+    
+    .value-icon {
+        font-size: 1.5rem;
+        color: var(--primary-blue);
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .value-item span {
+        font-weight: 600;
+        color: var(--dark-text);
+        transition: all 0.3s ease;
+    }
+    
+    /* Team Section */
+    .team-section {
+        padding: 6rem 0;
+        background: var(--gradient-blue);
+        position: relative;
+        color: var(--white);
+    }
+    
+    .section-title {
+        color: var(--white);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .commitment-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .commitment-card::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .commitment-card::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .commitment-card p {
+        font-size: 1.25rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .signature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .signature span {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+    }
+    
+    .signature small {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 991px) {
+        .hero-section, .mission-section, .team-section {
+            padding: 4rem 0;
+        }
+        
+        .content-card, .vision-box {
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .image-card {
+            min-height: 350px;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .page-title {
+            font-size: 2.5rem;
+        }
+        
+        .commitment-card {
+            padding: 2rem;
+        }
+        
+        .commitment-card p {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation classes on scroll
+        const animateOnScroll = function() {
+            const elements = document.querySelectorAll('.animate__animated:not(.animate__animated--triggered)');
+            
+            elements.forEach(function(element) {
+                if (isElementInViewport(element)) {
+                    const animationClass = element.classList.contains('animate__fadeIn') ? 'animate__fadeIn' : 
+                                          element.classList.contains('animate__fadeInLeft') ? 'animate__fadeInLeft' : 
+                                          element.classList.contains('animate__fadeInRight') ? 'animate__fadeInRight' : 
+                                          element.classList.contains('animate__zoomIn') ? 'animate__zoomIn' : 'animate__fadeIn';
+                    
+                    element.classList.add(animationClass, 'animate__animated--triggered');
+                }
+            });
+        };
+        
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                rect.bottom >= 0
+            );
+        }
+        
+        // Initial check
+        animateOnScroll();
+        
+        // Check on scroll
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Hover effects for value items
+        const valueItems = document.querySelectorAll('.value-item');
+        valueItems.forEach(function(item, index) {
+            item.style.animationDelay = (index * 0.1) + 's';
+        });
+    });
+</script>
 {% endblock main-content %}

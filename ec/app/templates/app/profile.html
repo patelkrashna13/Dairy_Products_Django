@@ -1,57 +1,334 @@
 {% extends "app/base.html" %}
 {% load static %}
-{% block title %}About{% endblock title %}
+{% block title %}Profile{% endblock title %}
 
 {% block main-content %}  
-<div class="container my-5">
-    <div class="row mb-4">
-        <div class="col-12 text-center">
-            <h3>Welcome, <span class="text-capitalize">{{ request.user }}</span></h3>
+<div class="profile-container">
+    <div class="container">
+        <div class="profile-header animate__animated animate__fadeInDown">
+            <h1 class="profile-title">My Profile</h1>
+            <div class="profile-welcome">Welcome, <span class="user-name text-capitalize">{{ request.user }}</span></div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3 border-end pe-4">
-            <ul class="list-unstyled">
-                <li class="mb-2"><a href="{% url 'profile' %}" class="btn btn-primary">Profile</a></li>
-                <li><a href="{% url 'address' %}" class="btn">Address</a></li>
-            </ul>
-        </div>
-
-        <div class="col-sm-8 offset-sm-1">
-            <form action="" method="post" class="border p-4 rounded shadow-sm bg-light">
-                {% csrf_token %}
-                <h4 class="mb-3 text-primary">Enter Your Information</h4>
-                {% for fm in form %}
-                    <div class="form-group mb-3">
-                        {{ fm.label_tag }} 
-                        {{ fm }} 
-                        <small class="text-danger">{{ fm.errors|striptags }}</small>
-                    </div>
-                {% endfor %}
-
-                <div class="col-12 mt-3">
-                    <button type="submit" class="btn btn-primary btn-lg w-100">Submit</button>
-                </div>
-
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger my-3">
-                        {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                {% if messages %}
-                    {% for msg in messages %}
-                        <div class="alert alert-{{ msg.tags }}" role="alert">
-                            {{ msg }}
+        
+        <div class="row profile-content">
+            <div class="col-lg-3 col-md-4">
+                <div class="profile-sidebar animate__animated animate__fadeInLeft">
+                    <div class="user-avatar">
+                        <div class="avatar-circle">
+                            <span>{{ request.user.username.0|upper }}</span>
                         </div>
-                    {% endfor %}
-                {% endif %}
-                
-            </form>
+                    </div>
+                    
+                    <div class="sidebar-menu">
+                        <a href="{% url 'profile' %}" class="menu-item active">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="{% url 'address' %}" class="menu-item">
+                            <i class="fas fa-map-marker-alt"></i> Address
+                        </a>
+                        <a href="{% url 'orders' %}" class="menu-item">
+                            <i class="fas fa-box"></i> Orders
+                        </a>
+                        <a href="{% url 'passwordchange' %}" class="menu-item">
+                            <i class="fas fa-lock"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9 col-md-8">
+                <div class="profile-form-container animate__animated animate__fadeInRight">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <h2 class="form-title">Personal Information</h2>
+                        
+                        <div class="row">
+                            {% for fm in form %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-floating">
+                                        {{ fm }}
+                                        <label for="{{ fm.id_for_label }}">{{ fm.label }}</label>
+                                        <small class="text-danger">{{ fm.errors|striptags }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn submit-btn">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mt-4">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <div class="alert alert-{{ msg.tags }} mt-4">
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .profile-container {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        min-height: 85vh;
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .profile-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .profile-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-welcome {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+    }
+    
+    .user-name {
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .profile-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .profile-sidebar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-avatar {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.7));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e3c72;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .menu-item {
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .menu-item i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .menu-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        transform: translateX(5px);
+    }
+    
+    .menu-item.active {
+        background: #ffffff;
+        color: #1e3c72;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-form-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        height: 100%;
+    }
+    
+    .form-title {
+        color: #1e3c72;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .form-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        border-radius: 3px;
+    }
+    
+    .form-floating {
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+    
+    .form-floating input, 
+    .form-floating select {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem 0.75rem 0.5rem;
+        height: calc(3.5rem + 2px);
+        background-color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+    }
+    
+    .form-floating input:focus,
+    .form-floating select:focus {
+        box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.3);
+        border-color: #4facfe;
+    }
+    
+    .form-floating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        color: #64748b;
+        pointer-events: none;
+        transition: all 0.2s ease;
+    }
+    
+    .form-floating input:focus ~ label,
+    .form-floating input:not(:placeholder-shown) ~ label,
+    .form-floating select:focus ~ label,
+    .form-floating select:not(:placeholder-shown) ~ label {
+        transform: translateY(-30%);
+        font-size: 0.75rem;
+        color: #1e3c72;
+    }
+    
+    .form-actions {
+        margin-top: 2rem;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #1e3c72, #4facfe);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #0c2b5e, #3a9fee);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .alert-danger {
+        background-color: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #dc2626;
+    }
+    
+    .alert-success {
+        background-color: rgba(34, 197, 94, 0.2);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #16a34a;
+    }
+    
+    @media (max-width: 991px) {
+        .profile-content {
+            flex-direction: column;
+        }
+        
+        .profile-sidebar, 
+        .profile-form-container {
+            margin-bottom: 2rem;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .profile-container {
+            padding: 2rem 0;
+        }
+        
+        .profile-title {
+            font-size: 2rem;
+        }
+        
+        .profile-form-container {
+            padding: 1.5rem;
+        }
+        
+        .form-title {
+            font-size: 1.25rem;
+        }
+    }
+</style>
 {% endblock main-content %}
